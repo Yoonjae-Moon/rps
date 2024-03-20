@@ -32,7 +32,7 @@ const choice = {
 function App() {
   const [userSelect, setUserSelect] = useState(null);
   const [computerSelect, setComputerSelect] = useState(null);
-  const [result, setResult]=useState(null);
+  const [result, setResult]=useState({user: null, computer: null});
 
   const play = (userChoice) => {
     // 내 선택
@@ -46,23 +46,6 @@ function App() {
 
   };
 
-  const judgement = (user, computer) => {
-    console.log("user", user, "computer", computer);
-    // user == computer tie
-    // user == rock, computer == scissors user win
-    // user == rock, computer == paper user lose
-    // user == scissors, computer == paper user win
-    // user == scissors, computer == rock user lose
-    // user == paper, computer == rock user win
-    // user == paper, computer == scissors user lose
-
-    if (user.name == computer.name){
-      return "tie";
-    }else if (user.name == "Rock") return computer.name == "Scissors" ? "win" : "lose";
-    else if (user.name == "Scissors") return computer.name == "Paper" ? "win" : "lose";
-    else if (user.name == "Paper") return computer.name == "Rock" ? "win" : "lose";
-  }
-
   const randomChoice = () => {
     // 객체의 키값만 뽑아서 배열로 만들어주는 함수
     let itemArray = Object.keys(choice);
@@ -72,11 +55,35 @@ function App() {
     return choice[final];
   }
 
+  const judgement = (user, computer) => {
+    // console.log("user", user, "computer", computer);
+    // user == computer tie
+    // user == rock, computer == scissors user win
+    // user == rock, computer == paper user lose
+    // user == scissors, computer == paper user win
+    // user == scissors, computer == rock user lose
+    // user == paper, computer == rock user win
+    // user == paper, computer == scissors user lose
+
+    if (user.name === computer.name){
+      return { user: "tie", computer: "tie"};
+    }else if(
+      (user.name === "Rock" && computer.name === "Scissors") ||
+      (user.name === "Scissors" && computer.name === "Paper") ||
+      (user.name === "Paper" && computer.name === "Rock")
+    ){
+      return {user: "win", computer: "lose"};
+    } else{
+      return {user: "lose", computer: "win"};
+    }
+  }
+
   return (
-    <div>
+    <div className="container">
+      <h1>가위~바위~보!</h1>
       <div className="main">
-        <Box title="You" item={userSelect} result={result}/>
-        <Box title="Computer" item={computerSelect} result={result}/>
+        <Box title="You" item={userSelect} result={result.user}/>
+        <Box title="Computer" item={computerSelect} result={result.computer}/>
       </div>
       <div className="main">
         <button onClick={() => play("scissors")}>가위</button>
